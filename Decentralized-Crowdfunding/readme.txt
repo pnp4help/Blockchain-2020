@@ -17,7 +17,7 @@ You need to install Node and some modules to run this project.
     solc (v0.4.17)
     web3 (v1.0.0-beta.26)
 
-3. Open command line in root project directory and start server by the following command
+3. Open command line in the root project directory and start server by the following command
     
     "npm run dev"
 

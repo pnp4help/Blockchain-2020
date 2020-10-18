@@ -6,7 +6,7 @@
 
 class HospitalContract {
 
-    async getCurrentUserID(ctx) {
+    async getCurrentID(ctx) {
 
         let ID = [];
         ID.push(ctx.clientIdentity.getID());
@@ -16,7 +16,7 @@ class HospitalContract {
     }
     async getCurrentType(ctx) {
 
-        let UserID = await this.getCurrentUserID(ctx);
+        let UserID = await this.getCurrentID(ctx);
 
         if (UserID == "ADMIN") {
             return UserID;

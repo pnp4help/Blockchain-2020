@@ -31,7 +31,7 @@ class HospitalContract {
     }
 
     async AdmitPatient(ctx, patientID, NameOfPatient, paitentAge) {
-        var usertype = await this.getCurrentUserType(ctx);
+        var usertype = await this.getCurrentType(ctx);
         if( usertype != "ADMIN"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY ADMIN CAN DO THIS`);
         }
@@ -56,7 +56,7 @@ class HospitalContract {
 
 
     async PaitentChackup(ctx, problem) {
-        var usertype = await this.getCurrentUserType(ctx);
+        var usertype = await this.getCurrentType(ctx);
         if( usertype != "Doctor"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY DOCTOR CAN DO THIS`);
         }
@@ -77,7 +77,7 @@ class HospitalContract {
     }
 
     async PaitentMedicines(ctx, medicines) {
-        var usertype = await this.getCurrentUserType(ctx);
+        var usertype = await this.getCurrentType(ctx);
         if( usertype != "Doctor"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY DOCTOR CAN DO THIS`);
         }
@@ -97,7 +97,7 @@ class HospitalContract {
     }
 
     async deleteMyAsset(ctx, patientID) {
-        var usertype = await this.getCurrentUserType(ctx);
+        var usertype = await this.getCurrentType(ctx);
         if( usertype != "ADMIN"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY DOCTOR CAN DO THIS`);
         }

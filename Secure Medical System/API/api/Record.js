@@ -95,14 +95,8 @@ app.post('/api/register-user/', (request, response) => {
         response.json(error);
     });
 
-});  //  process route register-user
+});  
 
-//  Purpose:    To enroll registered users with Fabric CA;
-//              A call to enrollUser to Fabric CA generates (and returns) certificates for the given (registered) user;
-//              These certificates are need for subsequent calls to Fabric Peers.
-//  Input:  request.body = { userid, password, usertype }
-//  Iutput:  Certificate on successful enrollment
-//  Usage:  "smith", "smithpw", "producer"
 app.post('/api/enroll-user/', (req, response) => {
 
     console.log("\n  api/enrollUser ");
@@ -125,7 +119,7 @@ app.post('/api/enroll-user/', (req, response) => {
         response.status(500).send(error.toString());
     });
 
-})  //  end of app.post('/api/enroll-user/', (req, res) )
+})  
 
 app.get('/api/is-user-enrolled/:id/:type', (req, response) => {
 
@@ -162,13 +156,7 @@ app.get('/api/users', (req, res) => {
     });
 });
 
-/*
-login()
-input:  userid, password
-output:  userid, password, usertype
-response.errorcode:  SUCCESS, USER_NOT_ENROLLED, TRANSACTION_ERROR
-response.errormessage:  will have text for error message (edited)
-*/
+
 app.post('/api/login/:type', (req, res) => {
 
     let userId = req.body.userid;
@@ -248,7 +236,7 @@ app.post('/api/AdmitPatient', (req, res) => {
     console.log("\n name: " + name);
    
     
-    utils.AdmitAStudent(username,userty,name,PatientID)
+    utils.AdmitPatient(username,userty,name,PatientID)
     .then(result =>{
         res.json({'errorCode':result})
     }, (error) => {
@@ -268,7 +256,7 @@ let PatientID = req.body.PatientID;
 let usertype = req.body.usertype;
 
 console.log(username);
-utils.GetStudentInfo(username,PatientID,usertype)
+utils.GetPatientInfo(username,PatientID,usertype)
     .then(result =>{
         res.json(result)
     }, (error) => {

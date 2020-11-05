@@ -4,25 +4,28 @@
 
 'use strict';
 
-class HospitalContract {
+const { Contract } = require('fabric-contract-api');
 
-    async getCurrentID(ctx) {
+class MyAssetContract extends Contract {
 
-        let ID = [];
-        ID.push(ctx.clientIdentity.getID());
-        let userid = ID[0].substring(begin + 4, end);
+
+    async getCurrentUserId(ctx) {
+
+        let id = [];
+        id.push(ctx.clientIdentity.getID());
+        var begin = id[0].indexOf("/CN=");
+        var end = id[0].lastIndexOf("::/C=");
+        let userid = id[0].substring(begin + 4, end);
         return userid;
-        
     }
     async getCurrentType(ctx) {
 
-        let UserID = await this.getCurrentID(ctx);
+        let userid = await this.getCurrentUserId(ctx);
 
-        if (UserID == "ADMIN") {
-            return UserID;
+        if (userid == "admin") {
+            return userid;
         }
-        const UserType =  await ctx.clientIdentity.getAttributeValue("UserType");
-        return UserType;
+        return ctx.clientIdentity.getAttributeValue("usertype");
     }
 
     async patientExists(ctx, patientID) {
@@ -32,7 +35,7 @@ class HospitalContract {
 
     async AdmitPatient(ctx, patientID, NameOfPatient, paitentAge) {
         var usertype = await this.getCurrentType(ctx);
-        if( usertype != "ADMIN"){
+        if( usertype != "admin"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY ADMIN CAN DO THIS`);
         }
         const Exists = await this.patientExists(ctx, patientID);
@@ -55,50 +58,52 @@ class HospitalContract {
     }
 
 
-    async PaitentChackup(ctx, problem) {
+    
+    async PaitentChackup(ctx,patientID,data1,data2) {
         var usertype = await this.getCurrentType(ctx);
         if( usertype != "Doctor"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY DOCTOR CAN DO THIS`);
         }
-        const exists = await this.patientExists(ctx, problem);
+        const exists = await this.patientExists(ctx, patientID);
         if(!exists) {
-            throw new Error(`THIS PATIENT ${paitentID} DOES NOT EXISTS`);
+            throw new Error(`THIS PATIENT ${patientID} DOES NOT EXISTS`);
         }
-        var now = new Date();
-        const PaitentProblem = {
-            date: now.toFormat("DD/MM/YYYY"),
-            writer_id: paitentID,
-            information: problem,
-        }
-        record.PaitentProblem.push(PaitentProblem);
-        await ctx.stub.putState(patientID, Buffer.from(JSON.stringify(record)));
-        return true;
-        
-    }
 
-    async PaitentMedicines(ctx, medicines) {
+    let data={
+      '000-IDENTITY':patientID,
+      '001-AGE':data1,
+      'problem' :data2
+       };
+
+    await ctx.stub.putState(patientID,Buffer.from(JSON.stringify(data)));
+
+    console.log('ADDED TO THE LEDGER SUCCESSFULLY!');
+
+  }
+    async PaitentMedicines(ctx,patientID,data1,data2) {
         var usertype = await this.getCurrentType(ctx);
         if( usertype != "Doctor"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY DOCTOR CAN DO THIS`);
         }
-        const exists = await this.patientExists(ctx, problem);
+        const exists = await this.patientExists(ctx, patientID);
         if(!exists) {
-            throw new Error(`THIS PATIENT ${paitentID} DOES NOT EXISTS`);
+            throw new Error(`THIS PATIENT ${patientID} DOES NOT EXISTS`);
         }
-        var now = new Date();
-        const Medicines = {
-            date: now.toFormat("DD/MM/YYYY"),
-            writer_id: paitentID,
-            MedicinesList: medicines,
-        }
-        record.Medicines.push(Medicines);
-        await ctx.stub.putState(patientID, Buffer.from(JSON.stringify(record)));
-        return true;
+       let data={
+      '000-IDENTITY':patientID,
+      '001-AGE':data1,
+      'Medicines' :data2
+       };
+
+    await ctx.stub.putState(patientID,Buffer.from(JSON.stringify(data)));
+
+    console.log('ADDED TO THE LEDGER SUCCESSFULLY!');
+       
     }
 
     async deleteMyAsset(ctx, patientID) {
         var usertype = await this.getCurrentType(ctx);
-        if( usertype != "ADMIN"){
+        if( usertype != "admin"){
             throw new Error(`YOU DON'T HAVE PARMISSION TO DO THIS ONLY DOCTOR CAN DO THIS`);
         }
         const exists = await this.patientExists(ctx, patientID);
@@ -108,6 +113,9 @@ class HospitalContract {
         await ctx.stub.deleteState(patientID);
     }
 
+
+
+
 }
 
-module.exports = HospitalContract;
+module.exports = MyAssetContract;

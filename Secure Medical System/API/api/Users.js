@@ -85,10 +85,10 @@ const peerIdentity = 'PatientApp';
      console.log('MSP ID: ' + orgMSPID);
     //use our config file, our peerIdentity, and our discovery options to connect to Fabric network.
     await gateway.connect(ccp_org2, { wallet, identity: peerIdentity, discovery: configdata.gatewayDiscovery });
-    //connect to our channel that has been created on IBM yash/Internship_projects Platform
+    //connect to our channel that has been created on IBM  Platform
     const network = await gateway.getNetwork('mychannel');
     console.log('here');
-    //connect to our insurance contract that has been installed / instantiated on IBM yash/Internship_projects Platform
+    //connect to our insurance contract that has been installed / instantiated on IBM platform
      contract = await network.getContract('Blockchain'); 
   } catch (error) {
     console.error(`Failed to submit transaction: ${error}`);
@@ -317,10 +317,6 @@ router.getAllUsers = async (usertype) => {
 
 router.setUserContext = async (userid, pwd,usertype) => {
     console.log('In function: setUserContext ....');
-
-    // It is possible that the user has been registered and enrolled in Fabric CA earlier
-    // and the certificates (in the wallet) could have been removed.  
-    // Note that this case is not handled here.
 
     // Verify if user is already enrolled
     if(usertype == 'Doctor'){
